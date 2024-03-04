@@ -94,13 +94,4 @@ const getTeamworkBarchart = async (body) => {
   return JSON.parse(resResponse);
 };
 
-const processAllVisualisations = async (simulationId) => {
-  return await communicationAPI.get(`/generate_viz?sessionId=${simulationId}`);
-};
-
-export {
-  getSNAdata,
-  getENAdata,
-  getTeamworkBarchart,
-  processAllVisualisations,
-};
+export { getSNAdata, getENAdata, getTeamworkBarchart };
