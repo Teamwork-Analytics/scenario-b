@@ -69,12 +69,6 @@ class HexagonComponent {
         });
       }.bind(this)
     );
-
-    // this.svg.append("text")
-    //     .text("PC")
-    //     .attr("x", 370)
-    //     .attr("y", 120)
-    //     .attr("fill", "white");
   }
 
   render(subjectPos, shotFlag, colour, number) {
