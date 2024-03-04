@@ -1,12 +1,11 @@
 import { Container } from "react-bootstrap";
-import { useParams } from "react-router-dom";
 import ReactTooltip from "react-tooltip";
 import DebriefingControllerModule from "./DebriefingControllerModule";
 import { useObservation } from "./ObservationContext";
 import ToolInPrep from "../../components/loadingComponents/ToolInPrep";
 
 const ObservationView = () => {
-  const { simulationId } = useParams();
+  const simulationId = 350;
   const { obsStartTime, obsEndTime } = useObservation();
 
   const styles = {

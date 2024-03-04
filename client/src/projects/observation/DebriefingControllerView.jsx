@@ -4,7 +4,6 @@ import { Row, Col, Tab, Container } from "react-bootstrap";
 import { BsInfoCircle } from "react-icons/bs";
 import { useTimeline } from "./visualisationComponents/TimelineContext";
 import { useObservation } from "./ObservationContext";
-import { useParams } from "react-router-dom";
 import {
   topTabVisualisations,
   bottomVisualisations,
@@ -48,8 +47,7 @@ const debriefStyles = {
 };
 
 const DebriefingControllerView = () => {
-  const { simulationId } = useParams();
-  const { range, simDuration, timelineTags } = useTimeline();
+  const { range } = useTimeline();
   const { isDataReady } = useObservation();
 
   // send selected Vis

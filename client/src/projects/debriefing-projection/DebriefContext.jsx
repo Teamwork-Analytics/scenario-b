@@ -10,9 +10,7 @@ const DebriefingContext = React.createContext();
 
 function DebriefingProvider({ simulationId, children }) {
   const [isStarted, setIsStarted] = React.useState(false);
-  // const [enaData, setENAdata] = useState([]);
   const [snaData, setSNAdata] = useState([]);
-  // const [networkENAData, setNetworkENAData] = useState([]);
 
   useEffect(() => {
     if (snaData.length == 0) {

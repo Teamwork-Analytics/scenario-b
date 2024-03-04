@@ -5,7 +5,6 @@ import floorPlan from "./floor-plan/floor-plan.svg";
 import HexagonComponent from "./Hexagon";
 import { useHive } from "./HiveContext";
 import { HivePrimaryControlView } from "./HiveControlView";
-import { useParams } from "react-router-dom";
 import SimpleErrorText from "../../components/errors/ErrorMessage";
 
 const HiveView = ({
@@ -19,7 +18,8 @@ const HiveView = ({
   const hiveRef = useRef();
   const { hiveState: hiveStateHook, isHiveReady } = useHive(); // renamed state to distinguish it from prop
   const hiveState = hiveStateProp || hiveStateHook; // Use prop if available, otherwise use state from hook
-  const csvUrl = "/350.csv";
+  const csvUrl =
+    "https://teamwork-analytics.github.io/dashboard-ghpage/350.csv";
 
   useEffect(() => {
     try {

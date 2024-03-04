@@ -4,7 +4,6 @@
  * It consists of a sidebar and a main view. Main view can be switched
  * between different tools.
  */
-import { useParams } from "react-router-dom";
 import EmptyPlaceholder from "../../components/EmptyPlaceholder";
 import { DebriefingProvider } from "../../projects/debriefing-projection/DebriefContext";
 import { HiveProvider } from "../../projects/hive/HiveContext";
@@ -43,14 +42,12 @@ const SimulationView = () => {
 };
 
 const VisualisationPage = () => {
-  const params = useParams();
-
   return (
     <SimProvider>
       {/* TODO: deal with multiple stack providers later! */}
-      <ObservationProvider simulationId={params.simulationId}>
-        <DebriefingProvider simulationId={params.simulationId}>
-          <HiveProvider simulationId={params.simulationId}>
+      <ObservationProvider simulationId={350}>
+        <DebriefingProvider simulationId={350}>
+          <HiveProvider simulationId={350}>
             <SimulationView />
           </HiveProvider>
         </DebriefingProvider>

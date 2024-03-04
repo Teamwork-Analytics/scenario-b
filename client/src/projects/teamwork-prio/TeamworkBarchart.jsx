@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { getTeamworkBarchart } from "../../services/py-server";
 import Barchart from "./Barchart";
 import SimpleErrorText from "../../components/errors/ErrorMessage";
@@ -13,7 +12,7 @@ const TeamworkBarchart = ({
   yLabelsFontSize,
   customAspectRatio,
 }) => {
-  const { simulationId } = useParams();
+  const simulationId = 350;
   const [teamworkData, setTeamworkData] = useState([]);
   const [isError, setIsError] = useState(teamworkData.length === 0);
 
