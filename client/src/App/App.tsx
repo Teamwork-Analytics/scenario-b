@@ -1,9 +1,8 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import SimulationPage from "../pages/simulation/SimulationPage";
-import ErrorPage from "../pages/error/ErrorPage";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { TEAM_NAME } from "../data/manualLabels";
 import toast, { Toaster, useToasterStore } from "react-hot-toast";
 
@@ -45,18 +44,13 @@ function App() {
       />
       <BrowserRouter>
         <Routes>
+          <Route path="/dashboard-ghpage" element={<SimulationPage />} />
           <Route
             path="/visualisation/:simulationId"
             element={<SimulationPage />}
           />
-          <Route
-            path="*"
-            element={<ErrorPage defaultUrl={"/visualisation/350"} />}
-          />
-          <Route
-            path="/"
-            element={<Navigate replace to="visualisation/350" />}
-          />
+          <Route path="*" element={<SimulationPage />} />
+          <Route path="/" element={<SimulationPage />} />
         </Routes>
       </BrowserRouter>
       <footer style={styles.footer}>

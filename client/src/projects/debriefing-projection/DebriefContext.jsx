@@ -13,7 +13,7 @@ function DebriefingProvider({ simulationId, children }) {
   const [snaData, setSNAdata] = useState([]);
 
   useEffect(() => {
-    if (snaData.length == 0) {
+    if (snaData.length === 0) {
       function callData() {
         // Fetch data immediately when component mounts
         getSNAdata(simulationId)

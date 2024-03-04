@@ -30,8 +30,6 @@ class HexagonComponent {
 
     d3.csv(csvData).then(
       function (d, i) {
-        // const startTime = timeParser(timeStart);
-        // const endTime = timeParser(timeEnd);
         const startTime = timeStart * 1000;
         const endTime = timeEnd * 1000;
 
