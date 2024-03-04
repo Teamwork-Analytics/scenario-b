@@ -88,25 +88,6 @@ const DebriefingControllerView = () => {
     toast.success("Visualisations projected to the screen.");
   };
 
-  // send empty list
-  const handleRevertAllProjections = () => {
-    const toastId = toast.loading("Loading...");
-    setSelectedVis([]);
-    const preparedData = prepareData(
-      range,
-      [],
-      simulationId,
-      simDuration,
-      timelineTags
-    );
-    taggingSocket.emit("send-disp-list", preparedData, () => {
-      console.log("Socket sent empty list to revert displays.");
-    });
-    toast.success("Sharing stopped", {
-      id: toastId,
-    });
-  };
-
   // tabs default active
   const [topActiveTab, setTopActiveTab] = useState("timeline");
 
@@ -145,12 +126,6 @@ const DebriefingControllerView = () => {
     setInfoModalContent(infoContent);
     setShowInfoModal(true);
   };
-  /**
-   * Update visualisations in the projector for any changes that are made with the timeline.
-   */
-  const updateProjector = () => {
-    handleConfirmProjection(selectedVis);
-  };
 
   useEffect(() => {
     handleConfirmProjection(selectedVis);
@@ -165,53 +140,6 @@ const DebriefingControllerView = () => {
         vizTitle={infoModalTitle}
       />
 
-      {/* Row to show selected list and projection control buttons */}
-      <Row style={{ margin: "3px", fontSize: "14px" }}>
-        <Col
-          className="d-flex align-items-center text-left"
-          style={{ fontSize: "12px" }}
-        >
-          <NurseNameBadges />
-        </Col>
-        <Col className="d-flex justify-content-end text-right" xs="auto">
-          <Button
-            variant="danger"
-            style={{ marginRight: "5px", fontSize: "14px" }}
-            onClick={() => {
-              trackEvent({
-                action: "click",
-                element: "stopSharingButton",
-              });
-              handleRevertAllProjections();
-            }}
-          >
-            <Row>
-              <Col md={1}>
-                <BsArrowRepeat size={"1.2em"} />
-              </Col>
-              <Col>Reset all</Col>
-            </Row>
-          </Button>
-          <Button
-            variant="success"
-            style={{ marginRight: "5px", fontSize: "14px" }}
-            onClick={() => {
-              trackEvent({
-                action: "click",
-                element: "updateProjector",
-              });
-              updateProjector();
-            }}
-          >
-            <Row>
-              <Col md={1}>
-                <BsUpload />
-              </Col>
-              <Col> Update Projector</Col>
-            </Row>
-          </Button>
-        </Col>
-      </Row>
       {/* Top row viz */}
       <Row style={{ minHeight: "35vh" }}>
         <Col style={{ padding: "1px" }}>
@@ -230,36 +158,6 @@ const DebriefingControllerView = () => {
             }}
           >
             <Tab.Container activeKey={topActiveTab}>
-              <Row style={{ marginBottom: "5px" }}>
-                <Col xs="auto">
-                  <ButtonGroup aria-label="Top area tab label">
-                    {topTabVisualisations(range).map((tab, index) => (
-                      <Button
-                        key={index}
-                        variant={
-                          topActiveTab === tab.eventKey
-                            ? "dark"
-                            : "outline-dark"
-                        }
-                        onClick={() => {
-                          trackEvent({
-                            action: "click",
-                            element: "topRowTabButton",
-                            data: tab.eventKey,
-                          });
-                          setTopActiveTab(tab.eventKey);
-                          setIsVideoTabActive(tab.eventKey === "video");
-                        }}
-                        style={{
-                          fontSize: "14px",
-                        }}
-                      >
-                        {tab.title}
-                      </Button>
-                    ))}
-                  </ButtonGroup>
-                </Col>
-              </Row>
               <Row>
                 <Tab.Content style={{ position: "relative" }}>
                   {topTabVisualisations(range).map((tab, index) => (
@@ -272,40 +170,6 @@ const DebriefingControllerView = () => {
                   ))}
                 </Tab.Content>
               </Row>
-              <Button
-                variant={
-                  selectedVis.some((vis) => vis.id === topActiveTab)
-                    ? "danger"
-                    : "success"
-                }
-                style={{
-                  ...debriefStyles.addVisButton,
-                  opacity: selectedVis.some((vis) => vis.id === topActiveTab)
-                    ? "0.65"
-                    : "1",
-                  display: topActiveTab === "video" ? "block" : "none", // button will be hidden when the video tab is not active
-                }}
-                onClick={() => {
-                  trackEvent({
-                    action: "click",
-                    element: "addOrRemoveVisToPreview(Top)",
-                    data: topActiveTab,
-                  });
-                  handleAddVis(topActiveTab);
-                }}
-              >
-                {selectedVis.some((vis) => vis.id === "video") ? (
-                  <>
-                    <FaCheckSquare style={{ marginBottom: "2px" }} /> Remove
-                    from projector
-                  </>
-                ) : (
-                  <>
-                    <FaSquare style={{ marginBottom: "2px" }} /> Add to
-                    projector
-                  </>
-                )}
-              </Button>
             </Tab.Container>
           </Container>
         </Col>
@@ -381,46 +245,7 @@ const DebriefingControllerView = () => {
                           </div>
                         </Col>
                       </Row>
-                      <Row>
-                        <Col>
-                          <Button
-                            variant={
-                              selectedVis.some((vis) => vis.id === tab.eventKey)
-                                ? "danger"
-                                : "success"
-                            }
-                            style={{
-                              fontSize: "14px",
-                              padding: "5px",
-                              whiteSpace: "nowrap",
-                            }}
-                            onClick={() => {
-                              trackEvent({
-                                action: "click",
-                                element: "addOrRemoveVisToPreview(Bottom)",
-                                data: tab.eventKey,
-                              });
-                              handleAddVis(tab.eventKey);
-                            }}
-                          >
-                            {selectedVis.some(
-                              (vis) => vis.id === tab.eventKey
-                            ) ? (
-                              <>
-                                <FaCheckSquare
-                                  style={{ marginBottom: "2px" }}
-                                />{" "}
-                                Remove from projector
-                              </>
-                            ) : (
-                              <>
-                                <FaSquare style={{ marginBottom: "2px" }} /> Add
-                                to projector
-                              </>
-                            )}
-                          </Button>
-                        </Col>
-                      </Row>
+
                       <Row>
                         <Container style={{ margin: "5px" }}>
                           {tab.component()}

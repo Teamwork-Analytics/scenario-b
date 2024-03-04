@@ -1,70 +1,124 @@
-const AWS = require("aws-sdk");
 const { fillErrorObject } = require("../middleware/error");
 const logger = require("winston");
+const fileSystem = require("fs");
+const path = require("node:path");
 
-AWS.config.update({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: "ap-southeast-4", // for example, 'us-west-1'
-});
+const getVisualisationFile = (req, res, next) => {
+  try {
+    const { simulationId, visType } = req.params;
+    let fileName = "";
+    if (visType === "audio-socnet") {
+      fileName = `audio_output_fig${simulationId}.png`;
+    } else if (visType === "teamwork-barchart") {
+      fileName = `teamwork.png`;
+    }
+    const directory = process.env.VISUALISATION_DIR + simulationId;
+    const pathJoined = path.join(directory, path.sep, fileName);
 
-const s3 = new AWS.S3();
+    res.setHeader("content-type", "image/png");
+
+    const readStream = fileSystem.createReadStream(pathJoined);
+
+    readStream.pipe(res);
+    readStream.on("error", (err) => {
+      res
+        .status(500)
+        .send(
+          fillErrorObject(500, "Unable to retrieve visualisation image", err)
+        );
+      readStream.emit("end"); //stop sending data
+      return;
+    });
+  } catch (err) {
+    return res
+      .status(500)
+      .send(
+        fillErrorObject(500, "Unable to retrieve visualisation image", err)
+      );
+  }
+};
 
 const checkDataReadiness = async (req, res, next) => {
   try {
     const { simulationId } = req.params;
-    const directory = `${simulationId}/result/`;
+    const directory = process.env.VISUALISATION_DIR + simulationId;
+    const pathJoined = path.join(directory, path.sep, "result");
+    console.log(pathJoined);
+
+    console.log("DIRECTORY: ", process.env.VISUALISATION_DIR + simulationId);
 
     const hiveFileName = `${simulationId}_all.csv`;
     const positionFileName = `${simulationId}_network_data.csv`;
     const communicationFileName = `${simulationId}.csv`;
     const syncFileName = "sync.txt";
-    const fileNames = [
-      hiveFileName,
-      positionFileName,
-      communicationFileName,
-      syncFileName,
-    ];
 
-    let missingFiles = [];
+    if (fileSystem.existsSync(pathJoined)) {
+      const fileNames = [
+        hiveFileName,
+        positionFileName,
+        communicationFileName,
+        syncFileName,
+      ];
 
-    for (const fileName of fileNames) {
-      const params = {
-        Bucket: process.env.VISUALISATION_DIR,
-        Key: directory + fileName,
-      };
+      let allFilesMissing = fileNames.every(
+        (fileName) =>
+          !fileSystem.existsSync(path.join(pathJoined, path.sep, fileName))
+      );
 
-      try {
-        await s3.headObject(params).promise();
-      } catch (error) {
-        if (error.code === "NotFound") {
-          missingFiles.push(fileName);
-        } else {
-          throw error;
-        }
+      if (allFilesMissing) {
+        res
+          .status(500)
+          .send(fillErrorObject(500, "All data is missing/not ready"));
+        return;
       }
-    }
 
-    if (missingFiles.length === fileNames.length) {
+      res.status(200).send("At least one data is ready!");
+
+      // if (
+      //   !fileSystem.existsSync(path.join(pathJoined, path.sep, hiveFileName))
+      // ) {
+      //   res
+      //     .status(500)
+      //     .send(fillErrorObject(500, "Ward map data is missing/not ready"));
+      //   return;
+      // }
+      // if (
+      //   !fileSystem.existsSync(
+      //     path.join(pathJoined, path.sep, positionFileName)
+      //   )
+      // ) {
+      //   res
+      //     .status(500)
+      //     .send(fillErrorObject(500, "Position data is missing/not ready"));
+      //   return;
+      // }
+      // if (
+      //   !fileSystem.existsSync(
+      //     path.join(pathJoined, path.sep, communicationFileName)
+      //   )
+      // ) {
+      //   res
+      //     .status(500)
+      //     .send(
+      //       fillErrorObject(500, "Communication data is missing/not ready")
+      //     );
+      //   return;
+      // }
+      // if (
+      //   !fileSystem.existsSync(path.join(pathJoined, path.sep, syncFileName))
+      // ) {
+      //   res.status(500).send(fillErrorObject(500, "Sync file is missing"));
+      //   return;
+      // }
+
+      // res.status(200).send("visualisation data is ready!");
+      // return;
+    } else {
       res
         .status(500)
-        .send(fillErrorObject(500, "All data is missing/not ready"));
+        .send(fillErrorObject(500, "Visualisation directory is missing"));
       return;
     }
-
-    if (missingFiles.length > 0) {
-      res
-        .status(500)
-        .send(
-          fillErrorObject(
-            500,
-            `${missingFiles.join(", ")} are missing/not ready`
-          )
-        );
-      return;
-    }
-
-    res.status(200).send("At least one data is ready!");
   } catch (err) {
     logger.error(err);
     return res
@@ -75,4 +129,4 @@ const checkDataReadiness = async (req, res, next) => {
   }
 };
 
-module.exports = { checkDataReadiness };
+module.exports = { getVisualisationFile, checkDataReadiness };

@@ -148,7 +148,6 @@ const FilteredMarksComponent = ({ marks, range, setRange }) => {
           height: "30vh",
           overflowY: "scroll",
           fontSize: "12px",
-          marginTop: "-30px",
           backgroundColor: "#f0f0f0",
           cursor: "pointer",
         }}
@@ -168,17 +167,6 @@ const FilteredMarksComponent = ({ marks, range, setRange }) => {
                   "0px 4px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12)",
               }}
               key={index}
-              onClick={() => {
-                trackEvent({
-                  action: "click",
-                  element: "clickOnLabelInTimelineCard",
-                  data: mark.label,
-                });
-                setRange([
-                  reverseFormatDuration(mark.value) - 10,
-                  reverseFormatDuration(mark.value) + 10,
-                ]);
-              }}
             >
               <Col
                 xs="auto"
@@ -284,10 +272,10 @@ const TimelineVisualisation = () => {
             <Slider
               value={range}
               max={simDuration}
-              onChange={(_, newValue) => {
-                setRange(newValue);
-                setPlayHeadPosition(newValue[0]);
-              }}
+              // onChange={(_, newValue) => {
+              //   setRange(newValue);
+              //   setPlayHeadPosition(newValue[0]);
+              // }}
               valueLabelDisplay="auto"
               // show tooltip in MM:SS format
               valueLabelFormat={(value) => {
@@ -304,6 +292,7 @@ const TimelineVisualisation = () => {
               }))}
               sx={timelineStyle.keyEventTimelineSx}
               style={{ marginTop: "100px" }}
+              
             />
             <div
               style={{

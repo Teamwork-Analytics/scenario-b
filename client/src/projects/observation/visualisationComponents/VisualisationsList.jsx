@@ -12,7 +12,6 @@
 
 import React from "react";
 import TimelineVisualisation from "./TimelineVisualisation";
-import VideoVisualisation from "./VideoVisualisation";
 
 // visualisations
 import { ENANetworkView, SocialNetworkView } from "../../communication";
@@ -40,7 +39,7 @@ const visStyles = {
 };
 
 // Configuration for top tab visualisations
-const topTabVisualisations = (timeRange) => [
+const topTabVisualisations = () => [
   {
     eventKey: "timeline",
     title: "Timeline",
@@ -55,23 +54,6 @@ const topTabVisualisations = (timeRange) => [
           ? visStyles.activeTab
           : visStyles.inactiveTab,
     }),
-  },
-  {
-    eventKey: "video",
-    title: "Video",
-    component: (style, isVideoTabActive) => (
-      <VideoVisualisation
-        style={{ ...style, ...visStyles.imageContainer, minHeight: "30vh" }}
-        isVideoTabActive={isVideoTabActive}
-        fluid
-        timeRange={timeRange}
-      />
-    ),
-    tabAttrs: (topActiveTab) => ({
-      style:
-        topActiveTab === "video" ? visStyles.activeTab : visStyles.inactiveTab,
-    }),
-    tabStyle: { minHeight: "30vh" },
   },
 ];
 
