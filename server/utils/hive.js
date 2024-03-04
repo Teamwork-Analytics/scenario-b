@@ -1,3 +1,0 @@
-const constructPhaseArray = () => {
-  //stopTime
-};

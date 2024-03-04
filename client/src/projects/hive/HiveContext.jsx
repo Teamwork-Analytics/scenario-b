@@ -6,7 +6,6 @@
 // GUIDE: https://kentcdodds.com/blog/how-to-use-react-context-effectively
 
 import React, { useEffect } from "react";
-import HiveAPI from "../../services/api/hive";
 
 const HiveContext = React.createContext();
 
@@ -16,39 +15,7 @@ function HiveProvider({ simulationId, children }) {
     phase: [0, 100],
     isPositionOnly: false,
   });
-  const [isHiveReady, setIsReady] = React.useState(false);
-  useEffect(() => {
-    HiveAPI.isDataReady(simulationId)
-      .then((res) => {
-        if (res.status === 200) {
-          // const cleanedPhases = cleanRawPhases(phases);
-          setIsReady(true);
-        }
-      })
-      .catch((e) => {});
-  }, [simulationId]);
-
-  useEffect(() => {
-    if (!isHiveReady) {
-      // Fetch data immediately when component mounts
-      function fetchData() {
-        HiveAPI.isDataReady(simulationId)
-          .then((res) => {
-            if (res.status === 200) {
-              // const cleanedPhases = cleanRawPhases(phases);
-              setIsReady(true);
-            }
-          })
-          .catch((e) => {});
-      }
-
-      // Set up interval to fetch data every X milliseconds. Here, we use 5000ms (5 seconds) as an example.
-      const intervalId = setInterval(fetchData, 10000);
-
-      // Clean up the interval when the component is unmounted or when data is fetched
-      return () => clearInterval(intervalId);
-    }
-  }, [isHiveReady, simulationId]);
+  const [isHiveReady] = React.useState(true);
 
   const value = {
     hiveState,

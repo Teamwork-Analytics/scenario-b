@@ -51,18 +51,6 @@ function DebriefingProvider({ simulationId, children }) {
       });
   }, [simulationId]);
 
-  // useEffect(() => {
-  //   try {
-  //     const net_data = processing_adjacent_matrix(enaData);
-  //     if (enaData.length !== 0) {
-  //       setNetworkENAData(net_data["nodes"].concat(net_data["edges"]));
-  //     }
-  //   } catch (err) {
-  //     toast.error(`SNA error: unable to change visualisation based on time`);
-  //     console.error(err);
-  //   }
-  // }, [enaData]);
-
   const value = { isStarted, setIsStarted, snaData };
   return (
     <DebriefingContext.Provider value={value}>

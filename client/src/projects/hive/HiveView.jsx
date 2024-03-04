@@ -19,13 +19,9 @@ const HiveView = ({
   const hiveRef = useRef();
   const { hiveState: hiveStateHook, isHiveReady } = useHive(); // renamed state to distinguish it from prop
   const hiveState = hiveStateProp || hiveStateHook; // Use prop if available, otherwise use state from hook
-  const { simulationId } = useParams();
-  const csvUrl =
-    process.env.REACT_APP_EXPRESS_IP +
-    ":" +
-    process.env.REACT_APP_EXPRESS_PORT +
-    "/api/hives/" +
-    simulationId;
+  const csvUrl = "/350.csv";
+
+  console.log(csvUrl);
 
   useEffect(() => {
     try {

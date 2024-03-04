@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import ReactSwitch from "react-switch";
 import { useHive } from "./HiveContext";
 import "./Hive.css";
 import { cssColourMatcher } from "./Hexagon";
-import { taggingSocket } from "../observation/socket";
 
 const colourLabels = {
   RED: "PN1",
@@ -21,10 +20,6 @@ const ParticipantFilter = ({ colourCode }) => {
     let modifiedParticipants = { ...hiveState.participants };
     modifiedParticipants[colourCode] = nextChecked;
     hiveSetState({
-      ...hiveState,
-      participants: modifiedParticipants,
-    });
-    taggingSocket.emit("send-nurse-filter", {
       ...hiveState,
       participants: modifiedParticipants,
     });
