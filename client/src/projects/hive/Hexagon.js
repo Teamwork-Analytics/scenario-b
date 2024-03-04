@@ -27,13 +27,6 @@ const timeParser = (timestamp) => {
 class HexagonComponent {
   constructor(svg, csvData, posOnly, selectedColours, timeStart, timeEnd) {
     this.svg = svg;
-    d3.csv(csvData)
-      .then((data) => {
-        console.log("CSV data loaded:", data);
-      })
-      .catch((error) => {
-        console.error("Error loading CSV:", error);
-      });
 
     d3.csv(csvData).then(
       function (d, i) {

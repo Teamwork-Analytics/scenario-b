@@ -21,8 +21,6 @@ const HiveView = ({
   const hiveState = hiveStateProp || hiveStateHook; // Use prop if available, otherwise use state from hook
   const csvUrl = "/350.csv";
 
-  console.log(csvUrl);
-
   useEffect(() => {
     try {
       d3.select("#floor-plan").remove();
