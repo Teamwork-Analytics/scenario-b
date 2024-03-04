@@ -55,44 +55,6 @@ def call_viz():
     return "Visualisations have been generated.", 200
 
 
-@ app.route("/get_teamwork_prio_data", methods=['GET'])
-def give_prioritisation_test_data():
-    """
-    This function is to return the testing data for task prioritisation graph.
-    The format of returned json is {"task allocation": {"task allocation": int, ...}, ...: {}, }
-    :return:
-    """
-    args = request.args
-    try:
-        start_time = float(args["start"])
-        end_time = float(args["end"])
-        session_id = args["sessionId"]
-    except Exception:
-        error_message = "Error happened when extracting GET params: maybe not all arguments are provided."
-        print(error_message)
-        return error_message, 500
-
-    # todo: this path should be changed once used in actual scenario
-    file = "%s.csv" % session_id
-    # dir_path = DIRECTORY / session_id / "result"
-    dir_path = os.path.join(DIRECTORY, session_id, "result")
-
-    # file_path = dir_path / file
-    file_path = os.path.join(dir_path, file)
-    # test_data_path = "test_data/{}.csv".format(session_id)
-    # sync_data_path = dir_path / "sync.txt"
-    sync_data_path = os.path.join(dir_path, "sync.txt")
-
-    positioning_start_timestamp = get_timestamp_from_sync(
-        sync_data_path, "positioning")
-    processed_pozyx_data = pd.read_csv(file_path)
-    # session_id_int = int(session_id)  # TODO: please change me!
-
-    output_data = IPA_for_front_end(processed_pozyx_data, session_id, positioning_start_timestamp,
-                                    start_time, end_time)
-    return jsonify(output_data)
-
-
 @ app.route("/get_data", methods=['GET'])
 def give_sna_test_data():
     """

@@ -4,14 +4,11 @@ import { Row, Col, Tab, Container } from "react-bootstrap";
 import { BsInfoCircle } from "react-icons/bs";
 import { useTimeline } from "./visualisationComponents/TimelineContext";
 import { useObservation } from "./ObservationContext";
-import { taggingSocket } from "./socket";
 import { useParams } from "react-router-dom";
-import toast from "react-hot-toast";
 import {
   topTabVisualisations,
   bottomVisualisations,
 } from "./visualisationComponents/VisualisationsList";
-import { prepareData } from "../../utils/socketUtils";
 import VisualisationInfoModal from "./visualisationComponents/VisualisationInfoModal";
 import ToolInPrep from "../../components/loadingComponents/ToolInPrep";
 
@@ -57,31 +54,7 @@ const DebriefingControllerView = () => {
 
   // send selected Vis
   const handleConfirmProjection = (selectedVis) => {
-    console.log(selectedVis);
-    const cleanScreenData = prepareData(
-      range,
-      [],
-      simulationId,
-      simDuration,
-      timelineTags
-    );
-    taggingSocket.emit("send-disp-list", cleanScreenData, () => {
-      console.log("Socket sent empty list to clean screen.");
-    });
-    const preparedData = prepareData(
-      range,
-      selectedVis,
-      simulationId,
-      simDuration,
-      timelineTags
-    );
-    taggingSocket.emit("send-disp-list", preparedData, () => {
-      console.log(
-        "Socket sent selected displays to server in a form of a list."
-      );
-    });
     setShowPreviewModal(false);
-    toast.success("Visualisations projected to the screen.");
   };
 
   // tabs default active
