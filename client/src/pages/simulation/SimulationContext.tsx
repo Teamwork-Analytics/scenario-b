@@ -1,6 +1,5 @@
 import * as React from "react";
 import * as Observation from "../../projects/observation/index";
-import * as Debrief from "../../projects/debriefing-projection/index";
 
 type SimProviderProps = {
   children: React.ReactNode;
@@ -18,10 +17,6 @@ const availableTools: any = {
   observation: {
     label: "Observation",
     mainView: <Observation.ObservationView />,
-  },
-  debrief: {
-    label: "Debriefing",
-    mainView: <Debrief.DebriefView />,
   },
 };
 

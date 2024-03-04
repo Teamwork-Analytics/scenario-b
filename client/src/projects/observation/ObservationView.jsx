@@ -1,18 +1,13 @@
 import { Container } from "react-bootstrap";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import ReactTooltip from "react-tooltip";
 import DebriefingControllerModule from "./DebriefingControllerModule";
 import { useObservation } from "./ObservationContext";
 import ToolInPrep from "../../components/loadingComponents/ToolInPrep";
-import { ArrowLeft } from "react-bootstrap-icons";
-import { useTracking } from "react-tracking";
-import { NurseNameProvider } from "./visualisationComponents/NurseNameContext";
 
 const ObservationView = () => {
   const { simulationId } = useParams();
   const { obsStartTime, obsEndTime } = useObservation();
-  const { Track, trackEvent } = useTracking({ page: "Observation" });
-  const navigate = useNavigate();
 
   const styles = {
     outer: {
@@ -30,35 +25,19 @@ const ObservationView = () => {
   };
 
   return (
-    <Track>
-      <div style={styles.outer}>
-        <div style={styles.backButton}>
-          <ArrowLeft
-            style={{ cursor: "pointer" }}
-            onClick={() => {
-              trackEvent({
-                action: "click",
-                element: "returnToMainPage",
-              });
-              navigate("/main");
-            }}
-            size={"30px"}
-          />
-        </div>
+    <div style={styles.outer}>
+      <h1>Demo Session {simulationId}</h1>
 
-        <h1>Demo session {simulationId}</h1>
+      {obsStartTime && obsEndTime ? (
+        <DebriefingControllerModule />
+      ) : (
+        <Container style={{ display: "flex", minHeight: "60vh" }}>
+          <ToolInPrep />
+        </Container>
+      )}
 
-        {obsStartTime && obsEndTime ? (
-          <DebriefingControllerModule />
-        ) : (
-          <Container style={{ display: "flex", minHeight: "60vh" }}>
-            <ToolInPrep />
-          </Container>
-        )}
-
-        <ReactTooltip />
-      </div>
-    </Track>
+      <ReactTooltip />
+    </div>
   );
 };
 

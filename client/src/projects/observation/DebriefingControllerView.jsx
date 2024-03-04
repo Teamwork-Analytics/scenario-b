@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import { Row, Col, Tab, Container, Button, ButtonGroup } from "react-bootstrap";
+import { Row, Col, Tab, Container } from "react-bootstrap";
 
-import { FaCheckSquare, FaSquare } from "react-icons/fa";
-import { BsInfoCircle, BsArrowRepeat, BsUpload } from "react-icons/bs";
+import { BsInfoCircle } from "react-icons/bs";
 import { useTimeline } from "./visualisationComponents/TimelineContext";
 import { useObservation } from "./ObservationContext";
 import { taggingSocket } from "./socket";
@@ -14,9 +13,7 @@ import {
 } from "./visualisationComponents/VisualisationsList";
 import { prepareData } from "../../utils/socketUtils";
 import VisualisationInfoModal from "./visualisationComponents/VisualisationInfoModal";
-import NurseNameBadges from "./visualisationComponents/NurseNameBadges";
 import ToolInPrep from "../../components/loadingComponents/ToolInPrep";
-import { useTracking } from "react-tracking";
 
 const debriefStyles = {
   activeTab: {
@@ -54,7 +51,6 @@ const debriefStyles = {
 };
 
 const DebriefingControllerView = () => {
-  const { Track, trackEvent } = useTracking({ page: "Debriefing" });
   const { simulationId } = useParams();
   const { range, simDuration, timelineTags } = useTimeline();
   const { isDataReady } = useObservation();
@@ -89,28 +85,15 @@ const DebriefingControllerView = () => {
   };
 
   // tabs default active
-  const [topActiveTab, setTopActiveTab] = useState("timeline");
+  const [topActiveTab] = useState("timeline");
 
   // visualisations selection
-  const [selectedVis, setSelectedVis] = useState([]);
-  const handleAddVis = (id) => {
-    if (!selectedVis.some((item) => item.id === id) && selectedVis.length < 3) {
-      setSelectedVis([...selectedVis, { id: id }]);
-      handleConfirmProjection([...selectedVis, { id: id }]);
-    } else if (selectedVis.some((item) => item.id === id)) {
-      setSelectedVis(selectedVis.filter((item) => item.id !== id));
-      handleConfirmProjection(selectedVis.filter((item) => item.id !== id));
-    } else if (selectedVis.length >= 3) {
-      alert("You've already selected the maximum of 3 visualisations.");
-    } else {
-      alert("Something went wrong.");
-    }
-  };
+  const [selectedVis] = useState([]);
 
   // preview modal before projection
   const [showPreviewModal, setShowPreviewModal] = useState(false);
 
-  const [isVideoTabActive, setIsVideoTabActive] = useState(false);
+  const [isVideoTabActive] = useState(false);
 
   // info modal handler for each visualisation
   const [infoModalContent, setInfoModalContent] = useState(null);
@@ -132,7 +115,7 @@ const DebriefingControllerView = () => {
   }, [range]);
 
   return (
-    <Track>
+    <>
       <VisualisationInfoModal
         infoDiv={infoModalContent}
         show={showInfoModal}
@@ -225,11 +208,6 @@ const DebriefingControllerView = () => {
                               paddingRight: "15px",
                             }}
                             onClick={() => {
-                              trackEvent({
-                                action: "click",
-                                element: "titleWithShowInfoIcon",
-                                data: tab.title,
-                              });
                               handleInfoShow(tab.title, tab.info());
                             }}
                           >
@@ -263,7 +241,7 @@ const DebriefingControllerView = () => {
           </Container>
         </Col>
       </Row>
-    </Track>
+    </>
   );
 };
 

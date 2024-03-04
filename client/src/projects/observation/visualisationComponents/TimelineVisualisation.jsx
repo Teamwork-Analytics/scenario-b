@@ -17,7 +17,6 @@ import {
 } from "react-icons/bs";
 import { manualLabels } from "../index.js";
 import { COLOURS } from "../../../config/colours.js";
-import { useTracking } from "react-tracking";
 
 // styling
 const timelineStyle = {
@@ -117,15 +116,7 @@ const formatDuration = (value) => {
   return `${minute}:${secondLeft < 10 ? `0${secondLeft}` : secondLeft}`;
 };
 
-// convert to seconds from duration
-const reverseFormatDuration = (formattedDuration) => {
-  const [minutes, seconds] = formattedDuration.split(":").map(Number);
-  return minutes * 60 + seconds;
-};
-
-const FilteredMarksComponent = ({ marks, range, setRange }) => {
-  const { Track, trackEvent } = useTracking({ page: "Debriefing" });
-
+const FilteredMarksComponent = ({ marks, range }) => {
   // console.log(marks);
   // Filter marks within the range
   const filteredMarks = marks.filter((mark) => {
@@ -142,73 +133,69 @@ const FilteredMarksComponent = ({ marks, range, setRange }) => {
 
   // Render the formatted marks
   return (
-    <Track>
-      <Card
-        style={{
-          height: "30vh",
-          overflowY: "scroll",
-          fontSize: "12px",
-          backgroundColor: "#f0f0f0",
-          cursor: "pointer",
-        }}
-      >
-        <Card.Body>
-          {formattedMarks.map((mark, index) => (
-            <Row
+    <Card
+      style={{
+        height: "30vh",
+        overflowY: "scroll",
+        fontSize: "12px",
+        backgroundColor: "#f0f0f0",
+        cursor: "pointer",
+      }}
+    >
+      <Card.Body>
+        {formattedMarks.map((mark, index) => (
+          <Row
+            style={{
+              marginLeft: "0px",
+              marginRight: "0px",
+              marginTop: "4px",
+              marginBottom: "4px",
+              backgroundColor: "white",
+              borderRadius: "0.5em",
+              padding: "0.5em 0",
+              boxShadow:
+                "0px 4px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12)",
+            }}
+            key={index}
+          >
+            <Col
+              xs="auto"
               style={{
-                marginLeft: "0px",
-                marginRight: "0px",
-                marginTop: "4px",
-                marginBottom: "4px",
-                backgroundColor: "white",
-                borderRadius: "0.5em",
-                padding: "0.5em 0",
-                boxShadow:
-                  "0px 4px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12)",
+                margin: "auto",
+                paddingLeft: "5px",
+                paddingRight: "5px",
               }}
-              key={index}
             >
-              <Col
-                xs="auto"
-                style={{
-                  margin: "auto",
-                  paddingLeft: "5px",
-                  paddingRight: "5px",
-                }}
-              >
-                {mark.favourite ? (
-                  <BsStarFill size="0.7em" color={COLOURS.SECONDARY_NURSE_2} />
-                ) : isKeyEvent(mark.label) ? (
-                  <BsCircleFill size="0.5em" color={COLOURS.KEY_EVENT_PURPLE} />
-                ) : (
-                  <BsCircle size="0.5em" color={COLOURS.ACTION_ORANGE} />
-                )}
-              </Col>
-              <Col
-                style={{
-                  margin: "auto",
-                  paddingLeft: "5px",
-                  paddingRight: "5px",
-                  textAlign: "left",
-                }}
-              >
-                {mark.value} - {mark.label}
-              </Col>
-            </Row>
-          ))}
-        </Card.Body>
-      </Card>
-    </Track>
+              {mark.favourite ? (
+                <BsStarFill size="0.7em" color={COLOURS.SECONDARY_NURSE_2} />
+              ) : isKeyEvent(mark.label) ? (
+                <BsCircleFill size="0.5em" color={COLOURS.KEY_EVENT_PURPLE} />
+              ) : (
+                <BsCircle size="0.5em" color={COLOURS.ACTION_ORANGE} />
+              )}
+            </Col>
+            <Col
+              style={{
+                margin: "auto",
+                paddingLeft: "5px",
+                paddingRight: "5px",
+                textAlign: "left",
+              }}
+            >
+              {mark.value} - {mark.label}
+            </Col>
+          </Row>
+        ))}
+      </Card.Body>
+    </Card>
   );
 };
 
 const TimelineVisualisation = () => {
-  const { Track, trackEvent } = useTracking({ page: "Debriefing" });
   // timeline range and playhead
   const {
     range,
     setRange,
-    setPlayHeadPosition,
     simDuration,
     timelineTags,
     index,
@@ -256,178 +243,164 @@ const TimelineVisualisation = () => {
   };
 
   return (
-    <Track>
-      <Container
-        style={{
-          marginTop: "15px",
-          marginBottom: "10px",
-          position: "relative",
-          maxWidth: "none",
-          paddingLeft: "10px",
-          paddingRight: "10px",
-        }}
-      >
-        <Row>
-          <Col style={{ paddingLeft: "5px", paddingRight: "5px" }}>
-            <Slider
-              value={range}
-              max={simDuration}
-              // onChange={(_, newValue) => {
-              //   setRange(newValue);
-              //   setPlayHeadPosition(newValue[0]);
-              // }}
-              valueLabelDisplay="auto"
-              // show tooltip in MM:SS format
-              valueLabelFormat={(value) => {
-                const minutes = Math.floor(value / 60);
-                const seconds = value % 60;
-                return `${minutes.toString().padStart(2, "0")}:${seconds
-                  .toString()
-                  .padStart(2, "0")}`;
-              }}
-              aria-labelledby="range-slider"
-              marks={modifiedTimelineTags.map((mark, index) => ({
-                ...mark,
-                label: <CustomMark mark={mark} index={index} />,
-              }))}
-              sx={timelineStyle.keyEventTimelineSx}
-              style={{ marginTop: "100px" }}
-              
-            />
-            <div
+    <Container
+      style={{
+        marginTop: "15px",
+        marginBottom: "10px",
+        position: "relative",
+        maxWidth: "none",
+        paddingLeft: "10px",
+        paddingRight: "10px",
+      }}
+    >
+      <Row>
+        <Col
+          style={{
+            paddingLeft: "5px",
+            paddingRight: "5px",
+            paddingTop: "25px",
+          }}
+        >
+          <Slider
+            value={range}
+            max={simDuration}
+            valueLabelDisplay="auto"
+            // show tooltip in MM:SS format
+            valueLabelFormat={(value) => {
+              const minutes = Math.floor(value / 60);
+              const seconds = value % 60;
+              return `${minutes.toString().padStart(2, "0")}:${seconds
+                .toString()
+                .padStart(2, "0")}`;
+            }}
+            aria-labelledby="range-slider"
+            marks={modifiedTimelineTags.map((mark, index) => ({
+              ...mark,
+              label: <CustomMark mark={mark} index={index} />,
+            }))}
+            sx={timelineStyle.keyEventTimelineSx}
+            style={{ marginTop: "100px" }}
+          />
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              marginTop: "-30px",
+            }}
+          >
+            <div style={timelineStyle.tinyDurationText}>
+              {formatDuration(0)}
+            </div>
+            <div style={timelineStyle.tinyDurationText}>
+              {formatDuration(simDuration)}
+            </div>
+          </div>
+          <div>
+            <Row
               style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                marginTop: "-30px",
+                marginLeft: "5px",
+                marginRight: "5px",
+                marginTop: "5px",
               }}
             >
-              <div style={timelineStyle.tinyDurationText}>
-                {formatDuration(0)}
-              </div>
-              <div style={timelineStyle.tinyDurationText}>
-                {formatDuration(simDuration)}
-              </div>
-            </div>
-            <div>
-              <Row
+              <Col
+                xs="auto"
                 style={{
-                  marginLeft: "5px",
-                  marginRight: "5px",
-                  marginTop: "5px",
+                  paddingLeft: "5px",
+                  paddingRight: "5px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
                 }}
               >
-                <Col
-                  xs="auto"
+                <p
                   style={{
-                    paddingLeft: "5px",
-                    paddingRight: "5px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "flex-end",
+                    color: "#6C757D",
+                    fontSize: "12px",
+                    margin: "auto",
                   }}
                 >
-                  <p
-                    style={{
-                      color: "#6C757D",
-                      fontSize: "12px",
-                      margin: "auto",
-                    }}
-                  >
-                    Select:
-                  </p>
-                </Col>
+                  Select:
+                </p>
+              </Col>
 
-                <Col
-                  style={{
-                    paddingLeft: "5px",
-                    paddingRight: "5px",
-                    textAlign: "left",
-                  }}
-                  xs="auto"
-                >
-                  <ButtonGroup aria-label="Phases">
-                    {phases.map((phase, index) => (
-                      <Button
-                        key={index}
-                        variant={
-                          phase.start === range[0] && phase.end === range[1]
-                            ? "dark"
-                            : "outline-dark"
-                        }
-                        onClick={() => {
-                          trackEvent({
-                            action: "click",
-                            element: "quickSelectPhaseButton",
-                            data: phase,
-                          });
-                          handleSelectPhase(phase);
-                        }}
-                        style={{
-                          fontSize: "12px",
-                        }}
-                      >
-                        {phase.name}
-                      </Button>
-                    ))}
-                  </ButtonGroup>
-                </Col>
-                <Col
-                  style={{
-                    paddingLeft: "5px",
-                    paddingRight: "5px",
-                    textAlign: "left",
-                  }}
-                  xs="auto"
-                >
-                  <ButtonGroup aria-label="Phases">
+              <Col
+                style={{
+                  paddingLeft: "5px",
+                  paddingRight: "5px",
+                  textAlign: "left",
+                }}
+                xs="auto"
+              >
+                <ButtonGroup aria-label="Phases">
+                  {phases.map((phase, index) => (
                     <Button
-                      variant="outline-dark"
+                      key={index}
+                      variant={
+                        phase.start === range[0] && phase.end === range[1]
+                          ? "dark"
+                          : "outline-dark"
+                      }
+                      onClick={() => {
+                        handleSelectPhase(phase);
+                      }}
                       style={{
                         fontSize: "12px",
                       }}
-                      onClick={() => {
-                        trackEvent({
-                          action: "click",
-                          element: "undoTimelineSelectionButton",
-                        });
-                        undoTimeline();
-                      }}
-                      disabled={!canUndo}
                     >
-                      Undo <BsArrowCounterclockwise size="1.2em" />
+                      {phase.name}
                     </Button>
-                    <Button
-                      variant="outline-dark"
-                      style={{
-                        fontSize: "12px",
-                      }}
-                      onClick={() => {
-                        trackEvent({
-                          action: "click",
-                          element: "redoTimelineSelectionButton",
-                        });
-                        redoTimeline();
-                      }}
-                      disabled={!canRedo}
-                    >
-                      Redo <BsArrowClockwise size="1.2em" />
-                    </Button>
-                  </ButtonGroup>
-                </Col>
-              </Row>
-            </div>
-          </Col>
-          <Col xs={3} style={{ paddingLeft: "5px", paddingRight: "5px" }}>
-            <FilteredMarksComponent
-              marks={timelineTags}
-              range={range}
-              setRange={setRange}
-            />
-          </Col>
-        </Row>
-      </Container>
-    </Track>
+                  ))}
+                </ButtonGroup>
+              </Col>
+              <Col
+                style={{
+                  paddingLeft: "5px",
+                  paddingRight: "5px",
+                  textAlign: "left",
+                }}
+                xs="auto"
+              >
+                <ButtonGroup aria-label="Phases">
+                  <Button
+                    variant="outline-dark"
+                    style={{
+                      fontSize: "12px",
+                    }}
+                    onClick={() => {
+                      undoTimeline();
+                    }}
+                    disabled={!canUndo}
+                  >
+                    Undo <BsArrowCounterclockwise size="1.2em" />
+                  </Button>
+                  <Button
+                    variant="outline-dark"
+                    style={{
+                      fontSize: "12px",
+                    }}
+                    onClick={() => {
+                      redoTimeline();
+                    }}
+                    disabled={!canRedo}
+                  >
+                    Redo <BsArrowClockwise size="1.2em" />
+                  </Button>
+                </ButtonGroup>
+              </Col>
+            </Row>
+          </div>
+        </Col>
+        <Col xs={3} style={{ paddingLeft: "5px", paddingRight: "5px" }}>
+          <FilteredMarksComponent
+            marks={timelineTags}
+            range={range}
+            setRange={setRange}
+          />
+        </Col>
+      </Row>
+    </Container>
   );
 };
 
