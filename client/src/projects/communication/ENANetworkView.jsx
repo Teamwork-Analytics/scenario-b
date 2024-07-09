@@ -5,7 +5,7 @@ import { getENAdata } from "../../services/py-server";
 import SimpleErrorText from "../../components/errors/ErrorMessage";
 
 const ENANetworkView = ({ timeRange, height = "30vh" }) => {
-  const simulationId = 350;
+  const simulationId = 417;
   const [enaData, setENAdata] = useState([]);
   const [networkENAData, setNetworkENAData] = useState([]);
   const [isError, setIsError] = useState(networkENAData.length === 0);

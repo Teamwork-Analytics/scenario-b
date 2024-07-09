@@ -5,7 +5,7 @@ import { useObservation } from "./ObservationContext";
 import ToolInPrep from "../../components/loadingComponents/ToolInPrep";
 
 const ObservationView = () => {
-  const simulationId = 350;
+  const simulationId = 417;
   const { obsStartTime, obsEndTime } = useObservation();
 
   const styles = {
@@ -25,7 +25,7 @@ const ObservationView = () => {
 
   return (
     <div style={styles.outer}>
-      <h1>Demo Session {simulationId}</h1>
+      <h1>Demo Scenario B</h1>
 
       {obsStartTime && obsEndTime ? (
         <DebriefingControllerModule />

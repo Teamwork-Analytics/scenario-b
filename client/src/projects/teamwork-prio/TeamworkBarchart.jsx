@@ -12,7 +12,7 @@ const TeamworkBarchart = ({
   yLabelsFontSize,
   customAspectRatio,
 }) => {
-  const simulationId = 350;
+  const simulationId = 417;
   const [teamworkData, setTeamworkData] = useState([]);
   const [isError, setIsError] = useState(teamworkData.length === 0);
 

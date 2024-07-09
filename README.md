@@ -1,6 +1,6 @@
-# Teamwork Dashboard GitHub Page (dashboard-ghpage)
+# Teamwork Dashboard GitHub Page (scenario-b)
 
-Deployed GitHub Page for teamwork dashboard at https://teamwork-analytics.github.io/dashboard-ghpage/
+Deployed GitHub Page for teamwork dashboard at https://teamwork-analytics.github.io/scenario-b/
 
 ## Overview
 
@@ -8,7 +8,7 @@ This repository provides a simplified teamwork dashboard hosted on GitHub Pages.
 
 ### What can the deployed dashboard do?
 
-On the [application](https://teamwork-analytics.github.io/dashboard-ghpage/), users can:
+On the [application](https://teamwork-analytics.github.io/scenario-b/), users can:
 
 1. **Phases Selection:** Click phases (All, Scenario started, Handover ends, etc.) to modify the timeline range.
 2. **Timeline Control:** Undo and redo timeline changes for easy navigation.

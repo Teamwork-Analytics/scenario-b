@@ -18,8 +18,7 @@ const HiveView = ({
   const hiveRef = useRef();
   const { hiveState: hiveStateHook, isHiveReady } = useHive(); // renamed state to distinguish it from prop
   const hiveState = hiveStateProp || hiveStateHook; // Use prop if available, otherwise use state from hook
-  const csvUrl =
-    "https://teamwork-analytics.github.io/dashboard-ghpage/350.csv";
+  const csvUrl = "https://teamwork-analytics.github.io/scenario-b/417.csv";
 
   useEffect(() => {
     try {
