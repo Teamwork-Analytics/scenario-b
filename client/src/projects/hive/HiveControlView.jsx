@@ -5,8 +5,8 @@ import "./Hive.css";
 import { cssColourMatcher } from "./Hexagon";
 
 const colourLabels = {
-  RED: "PN1",
-  BLUE: "PN2",
+  BLUE: "PN1",
+  RED: "PN2",
   GREEN: "SN1",
   YELLOW: "SN2",
 };
