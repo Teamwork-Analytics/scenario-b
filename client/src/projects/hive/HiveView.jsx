@@ -2,10 +2,12 @@ import { Fragment, useEffect, useRef } from "react";
 import * as d3 from "d3";
 
 import floorPlan from "./floor-plan/floor-plan.svg";
-import HexagonComponent from "./Hexagon";
+import HexagonComponent, { cssColourMatcher } from "./Hexagon";
 import { useHive } from "./HiveContext";
 import { HivePrimaryControlView } from "./HiveControlView";
+import { useParams } from "react-router-dom";
 import SimpleErrorText from "../../components/errors/ErrorMessage";
+import { Col, Row } from "react-bootstrap";
 
 const HiveView = ({
   timeRange,
@@ -16,9 +18,14 @@ const HiveView = ({
   hiveState: hiveStateProp, // renamed prop to distinguish it from hook state
 }) => {
   const hiveRef = useRef();
-  const { hiveState: hiveStateHook, isHiveReady } = useHive(); // renamed state to distinguish it from prop
+  const {
+    hiveState: hiveStateHook,
+    isHiveReady,
+    hrData,
+    setHrData,
+  } = useHive(); // renamed state to distinguish it from prop
   const hiveState = hiveStateProp || hiveStateHook; // Use prop if available, otherwise use state from hook
-  const csvUrl = "https://teamwork-analytics.github.io/scenario-b/417.csv";
+  const csvUrl = "https://teamwork-analytics.github.io/scenario-a/416.csv";
 
   useEffect(() => {
     try {
@@ -37,12 +44,37 @@ const HiveView = ({
             false,
             hiveState.participants,
             timeRange[0],
-            timeRange[1]
+            timeRange[1],
+            setHrData,
+            hiveState["showPositionAudioData"],
+            hiveState["showHeartRateData"]
           );
         }
       });
     } catch (err) {}
   }, [csvUrl, hiveState, isHiveReady, timeRange, showModal]);
+
+  const HeartRateBaseline = (
+    <div>
+      <small>Heart rate baseline:</small>
+      <Row>
+        {hrData &&
+          Object.keys(hrData).map((d) => {
+            return (
+              <Col>
+                <b
+                  style={{
+                    color: cssColourMatcher[hrData[d]["tagId"]],
+                  }}
+                >
+                  {hrData[d]["baselineHr"]}
+                </b>
+              </Col>
+            );
+          })}
+      </Row>
+    </div>
+  );
 
   return (
     <Fragment>
@@ -65,7 +97,8 @@ const HiveView = ({
               borderRadius: "1em",
             }}
           >
-            <div ref={hiveRef} style={{ height: "99%" }} />
+            {HeartRateBaseline}
+            <div ref={hiveRef} />
           </div>
           {showFilter && <HivePrimaryControlView />}
         </div>

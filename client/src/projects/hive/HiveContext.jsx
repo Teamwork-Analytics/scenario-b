@@ -10,10 +10,13 @@ import React from "react";
 const HiveContext = React.createContext();
 
 function HiveProvider({ simulationId, children }) {
+  const [hrData, setHrData] = React.useState({});
   const [hiveState, hiveSetState] = React.useState({
     participants: { BLUE: true, RED: true, GREEN: true, YELLOW: true },
     phase: [0, 100],
     isPositionOnly: false,
+    showPositionAudioData: true,
+    showHeartRateData: true,
   });
   const [isHiveReady] = React.useState(true);
 
@@ -21,6 +24,8 @@ function HiveProvider({ simulationId, children }) {
     hiveState,
     hiveSetState,
     isHiveReady,
+    setHrData,
+    hrData,
   };
 
   return <HiveContext.Provider value={value}>{children}</HiveContext.Provider>;
