@@ -98,7 +98,7 @@ const HiveView = ({
             }}
           >
             <div ref={hiveRef} />
-            {HeartRateBaseline}
+            {hiveState["showHeartRateData"] && HeartRateBaseline}
           </div>
           {showFilter && <HivePrimaryControlView />}
         </div>
